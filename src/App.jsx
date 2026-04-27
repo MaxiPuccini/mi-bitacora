@@ -8,6 +8,7 @@ import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc } from 'fireb
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from './firebase/firebaseConfig';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import UsersPage from './pages/UsersPage';
 
 const formatDate = (dateString) => {
   if (!dateString) return '';
@@ -73,7 +74,7 @@ function LoginPage() {
 }
 
 // ── NAVBAR ─────────────────────────────────────────────────
-function Navbar({ onGoHome, onNewTrip, isAdmin }) {
+function Navbar({ onGoHome, onNewTrip, onUsers, isAdmin }) {
   const { logout } = useAuth();
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50">
@@ -89,9 +90,14 @@ function Navbar({ onGoHome, onNewTrip, isAdmin }) {
               {isAdmin ? 'Admin' : 'Viajero'}
             </span>
             {isAdmin && (
-              <button onClick={onNewTrip} className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-blue-700 flex items-center shadow-sm">
-                <Plus className="h-4 w-4 sm:mr-1" /><span className="hidden sm:inline">Nuevo Viaje</span>
-              </button>
+              <>
+                <button onClick={onUsers} className="hidden sm:flex items-center text-sm font-medium text-gray-500 hover:text-purple-600 transition-colors bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200">
+                  <Shield className="h-4 w-4 sm:mr-1" /><span className="hidden sm:inline">Usuarios</span>
+                </button>
+                <button onClick={onNewTrip} className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-blue-700 flex items-center shadow-sm">
+                  <Plus className="h-4 w-4 sm:mr-1" /><span className="hidden sm:inline">Nuevo Viaje</span>
+                </button>
+              </>
             )}
             <button onClick={logout} className="text-gray-400 hover:text-red-500 transition-colors" title="Cerrar sesión">
               <LogOut className="h-5 w-5" />
@@ -335,8 +341,9 @@ function AppContent() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#fcfdfe] font-sans">
-      <Navbar isAdmin={isAdmin} onGoHome={() => setCurrentView('home')} onNewTrip={() => setCurrentView('create')} />
+      <Navbar isAdmin={isAdmin} onGoHome={() => setCurrentView('home')} onNewTrip={() => setCurrentView('create')} onUsers={() => setCurrentView('users')} />
       {currentView === 'home'   && <Home trips={trips} loading={tripsLoading} isAdmin={isAdmin} onTripSelect={id => { setSelectedTripId(id); setCurrentView('detail'); }} />}
+      {currentView === 'users'  && <UsersPage onBack={() => setCurrentView('home')} />}
       {currentView === 'detail' && <TripDetail trip={activeTrip} isAdmin={isAdmin} onBack={() => setCurrentView('home')} onEdit={() => setCurrentView('edit')} onDelete={handleDelete} />}
       {currentView === 'create' && <CreateTrip onSave={handleSave} onCancel={() => setCurrentView('home')} />}
       {currentView === 'edit'   && <CreateTrip initialData={activeTrip} onSave={handleSave} onCancel={() => setCurrentView('detail')} />}
