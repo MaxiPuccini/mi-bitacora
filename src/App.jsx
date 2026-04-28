@@ -5,7 +5,6 @@ import {
   Shield, Eye, Upload, Loader2, LogOut
 } from 'lucide-react';
 import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from './firebase/firebaseConfig';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import UsersPage from './pages/UsersPage';
@@ -240,9 +239,17 @@ const CreateTrip = ({ onSave, onCancel, initialData }) => {
   const [uploading, setUploading] = useState(false);
 
   const uploadFile = async (file) => {
-    const fileRef = ref(storage, `viajes/${Date.now()}-${file.name}`);
-    await uploadBytes(fileRef, file);
-    return getDownloadURL(fileRef);
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', 'bitacora-viajes');
+  formData.append('folder', 'bitacora-viajes');
+    const res = await fetch(
+    'https://api.cloudinary.com/v1_1/ddol2m1rg/image/upload',
+    { method: 'POST', body: formData }
+  );
+  if (!res.ok) throw new Error('Error al subir imagen a Cloudinary');
+  const data = await res.json();
+  return data.secure_url;
   };
 
   const handleSubmit = async (e) => {
