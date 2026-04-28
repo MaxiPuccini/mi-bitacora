@@ -28,6 +28,7 @@ function LoginPage() {
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
+    if (mode === 'register' && form.password.length < 8) { setError('La contraseña debe tener al menos 8 caracteres.'); return; }
     if (mode === 'register' && form.password !== form.confirm) { setError('Las contraseñas no coinciden.'); return; }
     setLoading(true);
     try {
@@ -313,7 +314,7 @@ function AppContent() {
 
   useEffect(() => {
     if (!user) return;
-    const tripsRef = collection(db, 'users', user.uid, 'trips');
+    const tripsRef = collection(db, 'trips');
     const unsub = onSnapshot(tripsRef, (snap) => {
       setTrips(snap.docs.map(d => ({ id: d.id, ...d.data() })));
       setTripsLoading(false);
@@ -329,9 +330,9 @@ function AppContent() {
 
   const handleSave = async (data) => {
     const { id, ...rest } = data;
-    const tripsRef = collection(db, 'users', user.uid, 'trips');
+    const tripsRef = collection(db, 'trips');
     if (currentView === 'edit') {
-      await updateDoc(doc(db, 'users', user.uid, 'trips', id), rest);
+      await updateDoc(doc(db, 'trips', id), rest);
       setCurrentView('detail');
     } else {
       await addDoc(tripsRef, rest);
@@ -340,7 +341,7 @@ function AppContent() {
   };
 
   const handleDelete = async (id) => {
-    await deleteDoc(doc(db, 'users', user.uid, 'trips', id));
+    await deleteDoc(doc(db, 'trips', id));
     setCurrentView('home');
   };
 
