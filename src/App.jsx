@@ -8,6 +8,7 @@ import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc } from 'fireb
 import { db, storage } from './firebase/firebaseConfig';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import UsersPage from './pages/UsersPage';
+import imageCompression from 'browser-image-compression';
 
 const formatDate = (dateString) => {
   if (!dateString) return '';
@@ -400,37 +401,81 @@ const TripDetail = ({ trip, onBack, onEdit, onDelete, isAdmin }) => {
 };
 
 // ── CREATE / EDIT ──────────────────────────────────────────
+// ── CREATE / EDIT ──────────────────────────────────────────
 const CreateTrip = ({ onSave, onCancel, initialData }) => {
   const [formData, setFormData] = useState(initialData || { title: '', country: '', location: '', date: '', coverImage: '', description: '', gallery: [] });
   const [imageFile, setImageFile] = useState(null);
   const [galleryFiles, setGalleryFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(null);
+  const [draggedIndex, setDraggedIndex] = useState(null);
 
   const uploadFile = async (file) => {
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('upload_preset', 'bitacora-viajes');
-  formData.append('folder', 'bitacora-viajes');
-    const res = await fetch(
-    'https://api.cloudinary.com/v1_1/ddol2m1rg/image/upload',
-    { method: 'POST', body: formData }
-  );
-  if (!res.ok) throw new Error('Error al subir imagen a Cloudinary');
-  const data = await res.json();
-  return data.secure_url;
+    const options = { maxSizeMB: 1, maxWidthOrHeight: 1920, useWebWorker: true };
+    const compressedFile = await imageCompression(file, options);
+
+    const data = new FormData();
+    data.append('file', compressedFile);
+    data.append('upload_preset', 'bitacora-viajes');
+    data.append('folder', 'bitacora-viajes');
+    
+    const res = await fetch('https://api.cloudinary.com/v1_1/ddol2m1rg/image/upload', { method: 'POST', body: data });
+    if (!res.ok) throw new Error('Error al subir imagen a Cloudinary');
+    const json = await res.json();
+    return json.secure_url;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUploading(true);
+    setUploadProgress({ current: 0, total: galleryFiles.length + (imageFile ? 1 : 0), message: 'Iniciando subida...' });
     try {
       let coverUrl = formData.coverImage;
-      if (imageFile) coverUrl = await uploadFile(imageFile);
+      if (imageFile) {
+        setUploadProgress(p => ({ ...p, message: 'Subiendo portada...' }));
+        coverUrl = await uploadFile(imageFile);
+        setUploadProgress(p => ({ ...p, current: p.current + 1 }));
+      }
+      
       const galleryUrls = [...formData.gallery];
-      for (const file of galleryFiles) galleryUrls.push(await uploadFile(file));
+      for (let i = 0; i < galleryFiles.length; i++) {
+        setUploadProgress(p => ({ ...p, message: `Subiendo foto ${i + 1} de ${galleryFiles.length}...` }));
+        const url = await uploadFile(galleryFiles[i]);
+        galleryUrls.push({ url, review: '' });
+        setUploadProgress(p => ({ ...p, current: p.current + 1 }));
+      }
       onSave({ ...formData, coverImage: coverUrl, gallery: galleryUrls });
-    } catch (err) { console.error('Error al subir archivos:', err); }
-    finally { setUploading(false); }
+    } catch (err) { 
+      console.error('Error al subir archivos:', err); 
+    } finally { 
+      setUploading(false);
+      setUploadProgress(null);
+    }
+  };
+
+  const handleDragStart = (e, index) => {
+    setDraggedIndex(index);
+    if (e.dataTransfer) {
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/html", e.target.parentNode);
+    }
+  };
+
+  const handleDragOver = (e, index) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === index) return;
+    
+    const items = [...formData.gallery];
+    const draggedItem = items[draggedIndex];
+    items.splice(draggedIndex, 1);
+    items.splice(index, 0, draggedItem);
+    
+    setDraggedIndex(index);
+    setFormData({ ...formData, gallery: items });
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
   };
 
   const inputCls = "w-full bg-gray-50 border-0 rounded-2xl p-4 focus:ring-2 focus:ring-primary-600 outline-none";
@@ -457,12 +502,83 @@ const CreateTrip = ({ onSave, onCancel, initialData }) => {
               </div>
             </div>
             <div className="md:col-span-2"><label className="block text-sm font-bold text-gray-700 mb-2">Tu Relato</label><textarea required rows="6" className={`${inputCls} resize-none`} value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} placeholder="Contanos qué descubriste..." /></div>
-            <div className="md:col-span-2"><label className="block text-sm font-bold text-gray-700 mb-2">Fotos de Galería</label><input type="file" multiple accept="image/*" className="w-full bg-gray-50 border-0 rounded-2xl p-4 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-800 hover:file:bg-primary-100" onChange={e => setGalleryFiles(Array.from(e.target.files))} /></div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-bold text-gray-700 mb-2">Fotos de Galería</label>
+              
+              {/* Mostrar fotos existentes si las hay */}
+              {formData.gallery?.length > 0 && (
+                <div className="mb-4">
+                  <span className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-2 block">Fotos guardadas (Arrastra para reordenar)</span>
+                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
+                    {formData.gallery.map((item, i) => {
+                      const url = typeof item === 'string' ? item : item.url;
+                      return (
+                        <div 
+                          key={i} 
+                          draggable
+                          onDragStart={(e) => handleDragStart(e, i)}
+                          onDragOver={(e) => handleDragOver(e, i)}
+                          onDragEnd={handleDragEnd}
+                          className={`relative group rounded-xl overflow-hidden shadow-sm h-24 border ${draggedIndex === i ? 'border-primary-500 opacity-50' : 'border-gray-100 cursor-grab active:cursor-grabbing'}`}
+                        >
+                          <img src={url} alt={`Existente ${i}`} className="w-full h-full object-cover pointer-events-none" />
+                          <button 
+                            type="button" 
+                            onClick={() => setFormData(prev => ({...prev, gallery: prev.gallery.filter((_, idx) => idx !== i)}))}
+                            className="absolute top-1 right-1 bg-red-600/90 hover:bg-red-700 backdrop-blur-sm text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-all shadow-sm"
+                            title="Eliminar esta foto"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Input para agregar nuevas fotos */}
+              <span className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-2 block">Agregar nuevas fotos</span>
+              <input type="file" multiple accept="image/*" className="w-full bg-gray-50 border-0 rounded-2xl p-4 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-800 hover:file:bg-primary-100" onChange={e => setGalleryFiles(prev => [...prev, ...Array.from(e.target.files)])} />
+              
+              {/* Previsualización de nuevas fotos */}
+              {galleryFiles.length > 0 && (
+                <div className="mt-4">
+                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
+                    {galleryFiles.map((file, i) => (
+                      <div key={i} className="relative group rounded-xl overflow-hidden shadow-sm h-24 border border-primary-200">
+                        <img src={URL.createObjectURL(file)} alt="Nueva foto" className="w-full h-full object-cover" />
+                        <button 
+                          type="button" 
+                          onClick={() => setGalleryFiles(prev => prev.filter((_, idx) => idx !== i))}
+                          className="absolute top-1 right-1 bg-red-600/90 hover:bg-red-700 backdrop-blur-sm text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-all shadow-sm"
+                          title="Quitar foto nueva"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
           <div className="flex justify-end pt-6">
-            <button disabled={uploading} type="submit" className="bg-primary-900 text-white px-10 py-4 rounded-2xl font-black hover:bg-primary-800 disabled:opacity-50 flex items-center shadow-xl">
-              {uploading ? <Loader2 className="animate-spin mr-2" /> : <Save className="mr-2" />}
-              {initialData ? 'Guardar Cambios' : 'Publicar Viaje'}
+            <button disabled={uploading} type="submit" className="bg-primary-900 text-white px-10 py-4 rounded-2xl font-black hover:bg-primary-800 disabled:opacity-50 flex items-center shadow-xl relative overflow-hidden">
+              {uploading ? (
+                <>
+                  <Loader2 className="animate-spin mr-2 z-10" />
+                  <span className="z-10 relative">{uploadProgress?.message || 'Guardando...'}</span>
+                  {uploadProgress && uploadProgress.total > 0 && (
+                    <div className="absolute top-0 bottom-0 left-0 bg-primary-600/50 transition-all duration-300" style={{ width: `${(uploadProgress.current / uploadProgress.total) * 100}%` }}></div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <Save className="mr-2" />
+                  {initialData ? 'Guardar Cambios' : 'Publicar Viaje'}
+                </>
+              )}
             </button>
           </div>
         </form>
