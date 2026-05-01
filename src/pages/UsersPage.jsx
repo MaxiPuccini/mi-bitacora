@@ -55,7 +55,7 @@ export default function UsersPage({ onBack }) {
       <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
         {loading ? (
           <div className="flex justify-center items-center py-20">
-            <Loader2 className="h-8 w-8 text-blue-500 animate-spin" />
+            <Loader2 className="h-8 w-8 text-primary-600 animate-spin" />
           </div>
         ) : users.length === 0 ? (
           <div className="text-center py-20 text-gray-400">No hay usuarios registrados.</div>
@@ -76,17 +76,17 @@ export default function UsersPage({ onBack }) {
                 const isSaving      = saving === u.id;
 
                 return (
-                  <tr key={u.id} className={`border-b border-gray-50 last:border-0 ${isCurrentUser ? 'bg-blue-50/40' : 'hover:bg-gray-50'} transition-colors`}>
+                  <tr key={u.id} className={`border-b border-gray-50 last:border-0 ${isCurrentUser ? 'bg-primary-50/40' : 'hover:bg-gray-50'} transition-colors`}>
                     {/* Nombre */}
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black ${isAdmin ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}`}>
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black ${isAdmin ? 'bg-purple-100 text-purple-700' : 'bg-primary-100 text-primary-800'}`}>
                           {(u.displayName ?? u.email ?? '?')[0].toUpperCase()}
                         </div>
                         <div>
                           <p className="text-sm font-bold text-gray-800">
                             {u.displayName ?? '—'}
-                            {isCurrentUser && <span className="ml-2 text-[10px] font-bold text-blue-400 uppercase">Vos</span>}
+                            {isCurrentUser && <span className="ml-2 text-[10px] font-bold text-primary-400 uppercase">Vos</span>}
                           </p>
                         </div>
                       </div>
@@ -102,7 +102,7 @@ export default function UsersPage({ onBack }) {
                       <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full border ${
                         isAdmin
                           ? 'bg-purple-50 border-purple-200 text-purple-700'
-                          : 'bg-blue-50 border-blue-200 text-blue-700'
+                          : 'bg-primary-50 border-primary-200 text-primary-800'
                       }`}>
                         {isAdmin ? <Shield className="h-3 w-3" /> : <User className="h-3 w-3" />}
                         {isAdmin ? 'Admin' : 'Viajero'}

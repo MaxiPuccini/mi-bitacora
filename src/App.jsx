@@ -38,13 +38,13 @@ function LoginPage() {
     finally { setLoading(false); }
   }
 
-  const inputCls = "w-full bg-gray-50 border-0 rounded-2xl p-4 focus:ring-2 focus:ring-blue-500 outline-none";
+  const inputCls = "w-full bg-gray-50 border-0 rounded-2xl p-4 focus:ring-2 focus:ring-primary-600 outline-none";
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#fcfdfe] px-4">
+    <div className="min-h-screen flex items-center justify-center bg-warm-50 px-4">
       <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-10 w-full max-w-md">
         <div className="flex items-center mb-8">
-          <Plane className="h-8 w-8 text-blue-600 mr-2" />
+          <Plane className="h-8 w-8 text-primary-900 mr-2" />
           <span className="font-bold text-xl text-gray-900">Mi Bitácora</span>
         </div>
         <h2 className="text-2xl font-black text-gray-900 mb-1">
@@ -60,12 +60,12 @@ function LoginPage() {
           <input required type="password" placeholder="Contraseña" className={inputCls} value={form.password} onChange={set('password')} />
           {mode === 'register' && <input required type="password" placeholder="Confirmar contraseña" className={inputCls} value={form.confirm} onChange={set('confirm')} />}
           <button type="submit" disabled={loading}
-            className="w-full bg-blue-600 text-white py-4 rounded-2xl font-black hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center justify-center">
+            className="w-full bg-primary-900 text-white py-4 rounded-2xl font-black hover:bg-primary-800 transition-colors disabled:opacity-50 flex items-center justify-center">
             {loading ? <Loader2 className="animate-spin h-5 w-5" /> : (mode === 'login' ? 'Ingresar' : 'Registrarse')}
           </button>
         </form>
         <button onClick={() => { setMode(m => m === 'login' ? 'register' : 'login'); setError(''); }}
-          className="w-full mt-4 text-sm text-blue-600 hover:underline">
+          className="w-full mt-4 text-sm text-primary-900 hover:underline">
           {mode === 'login' ? '¿No tenés cuenta? Registrate' : '¿Ya tenés cuenta? Ingresá'}
         </button>
       </div>
@@ -81,11 +81,11 @@ function Navbar({ onGoHome, onNewTrip, onUsers, isAdmin }) {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center cursor-pointer hover:opacity-80 transition-opacity" onClick={onGoHome}>
-            <Plane className="h-8 w-8 text-blue-600 mr-2" />
+            <Plane className="h-8 w-8 text-primary-900 mr-2" />
             <span className="font-bold text-xl text-gray-900 tracking-tight">Mi Bitácora</span>
           </div>
           <div className="flex items-center space-x-3">
-            <span className={`hidden sm:flex items-center text-xs font-bold px-3 py-1 rounded-full border ${isAdmin ? 'bg-purple-50 border-purple-200 text-purple-700' : 'bg-blue-50 border-blue-200 text-blue-700'}`}>
+            <span className={`hidden sm:flex items-center text-xs font-bold px-3 py-1 rounded-full border ${isAdmin ? 'bg-purple-50 border-purple-200 text-purple-700' : 'bg-blue-50 border-primary-200 text-primary-800'}`}>
               {isAdmin ? <Shield className="h-3 w-3 mr-1" /> : <Eye className="h-3 w-3 mr-1" />}
               {isAdmin ? 'Admin' : 'Viajero'}
             </span>
@@ -94,7 +94,7 @@ function Navbar({ onGoHome, onNewTrip, onUsers, isAdmin }) {
                 <button onClick={onUsers} className="hidden sm:flex items-center text-sm font-medium text-gray-500 hover:text-purple-600 transition-colors bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200">
                   <Shield className="h-4 w-4 sm:mr-1" /><span className="hidden sm:inline">Usuarios</span>
                 </button>
-                <button onClick={onNewTrip} className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-blue-700 flex items-center shadow-sm">
+                <button onClick={onNewTrip} className="bg-primary-900 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-primary-800 flex items-center shadow-sm">
                   <Plus className="h-4 w-4 sm:mr-1" /><span className="hidden sm:inline">Nuevo Viaje</span>
                 </button>
               </>
@@ -142,11 +142,11 @@ const Home = ({ trips, onTripSelect, loading }) => {
         {trips.length > 0 && (
           <div className="flex bg-white rounded-2xl shadow-sm border border-gray-100 p-1.5 w-full md:w-auto">
             <div className="px-6 py-2 text-center border-r border-gray-100 flex-1">
-              <p className="text-2xl font-black text-blue-600">{trips.length}</p>
+              <p className="text-2xl font-black text-primary-900">{trips.length}</p>
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Viajes</p>
             </div>
             <div className="px-6 py-2 text-center flex-1">
-              <p className="text-2xl font-black text-blue-600">{uniqueCountries}</p>
+              <p className="text-2xl font-black text-primary-900">{uniqueCountries}</p>
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Países</p>
             </div>
           </div>
@@ -155,11 +155,11 @@ const Home = ({ trips, onTripSelect, loading }) => {
       {trips.length > 0 && (
         <div className="relative max-w-md mb-8">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-          <input type="text" placeholder="Buscar por título o país..." className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none shadow-sm" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+          <input type="text" placeholder="Buscar por título o país..." className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-primary-600 outline-none shadow-sm" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
         </div>
       )}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20"><Loader2 className="h-10 w-10 text-blue-500 animate-spin mb-4" /><p className="text-gray-500 font-medium">Sincronizando...</p></div>
+        <div className="flex flex-col items-center justify-center py-20"><Loader2 className="h-10 w-10 text-primary-600 animate-spin mb-4" /><p className="text-gray-500 font-medium">Sincronizando...</p></div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-200"><Globe className="h-12 w-12 text-gray-300 mx-auto mb-4" /><p className="text-gray-500 text-lg">No se encontraron viajes.</p></div>
       ) : (
@@ -175,11 +175,40 @@ const Home = ({ trips, onTripSelect, loading }) => {
 const TripDetail = ({ trip, onBack, onEdit, onDelete, isAdmin }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+  const [isEditingReview, setIsEditingReview] = useState(false);
+  const [tempReview, setTempReview] = useState('');
 
   if (!trip) return null;
 
+  // Normalizar la galería para manejar tanto strings como objetos
+  const normalizedGallery = (trip.gallery || []).map(item => 
+    typeof item === 'string' ? { url: item, review: '' } : item
+  );
+
+  const handleOpenLightbox = (index) => {
+    setSelectedImageIndex(index);
+    setTempReview(normalizedGallery[index].review || '');
+    setIsEditingReview(false);
+  };
+
+  const handleSaveReview = async (e) => {
+    e.stopPropagation();
+    const updatedGallery = [...normalizedGallery];
+    updatedGallery[selectedImageIndex] = { 
+      ...updatedGallery[selectedImageIndex], 
+      review: tempReview 
+    };
+
+    try {
+      await updateDoc(doc(db, 'trips', trip.id), { gallery: updatedGallery });
+      setIsEditingReview(false);
+    } catch (err) {
+      console.error('Error al guardar reseña:', err);
+    }
+  };
+
   return (
-    <main className="flex-grow bg-[#fcfdfe] w-full pb-20">
+    <main className="flex-grow bg-warm-50 w-full pb-20">
       {/* Hero Section */}
       <div className="relative h-[60vh] min-h-[500px] w-full bg-gray-900">
         <img src={trip.coverImage} alt={trip.title} className="w-full h-full object-cover opacity-70" />
@@ -192,8 +221,8 @@ const TripDetail = ({ trip, onBack, onEdit, onDelete, isAdmin }) => {
           </button>
           {isAdmin && (
             <div className="flex gap-3">
-              <button onClick={onEdit} className="bg-blue-600/90 hover:bg-blue-700 backdrop-blur-sm px-5 py-2.5 rounded-full text-white text-sm font-bold shadow-lg flex items-center transition-all">
-                <Edit2 className="h-4 w-4 mr-2" />Editar
+              <button onClick={onEdit} className="bg-primary-900/90 hover:bg-primary-800 backdrop-blur-sm px-5 py-2.5 rounded-full text-white text-sm font-bold shadow-lg flex items-center transition-all">
+                <Edit2 className="h-4 w-4 mr-2" />Editar Viaje
               </button>
               <button onClick={() => setShowDeleteModal(true)} className="bg-red-600/90 hover:bg-red-700 backdrop-blur-sm px-5 py-2.5 rounded-full text-white text-sm font-bold shadow-lg flex items-center transition-all">
                 <Trash2 className="h-4 w-4 mr-2" />Eliminar
@@ -205,12 +234,12 @@ const TripDetail = ({ trip, onBack, onEdit, onDelete, isAdmin }) => {
         {/* Hero Content */}
         <div className="absolute bottom-24 left-0 w-full px-6 md:px-12 max-w-5xl mx-auto">
           <div className="flex flex-wrap items-center gap-3 mb-6">
-            <span className="bg-blue-600 text-white text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">{trip.country}</span>
+            <span className="bg-secondary-700 text-white text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">{trip.country}</span>
             <span className="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-4 py-1.5 rounded-full flex items-center shadow-lg">
-              <Calendar className="h-3 w-3 mr-1.5" />{formatDate(trip.date)}
+              <Calendar className="h-3 w-3 mr-1.5 text-secondary-600" />{formatDate(trip.date)}
             </span>
             <span className="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-4 py-1.5 rounded-full flex items-center shadow-lg">
-              <MapPin className="h-3 w-3 mr-1.5" />{trip.location}
+              <MapPin className="h-3 w-3 mr-1.5 text-secondary-600" />{trip.location}
             </span>
           </div>
           <h1 className="text-5xl md:text-7xl font-black text-white mb-4 leading-tight drop-shadow-xl">{trip.title}</h1>
@@ -220,32 +249,37 @@ const TripDetail = ({ trip, onBack, onEdit, onDelete, isAdmin }) => {
       {/* Main Content Overlapping Hero */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-20 -mt-16">
         <div className="bg-white rounded-[40px] shadow-2xl border border-gray-100 p-8 md:p-16 mb-12">
-          <div className="prose prose-lg md:prose-xl max-w-none text-gray-700 leading-relaxed whitespace-pre-line">
+          <div className="prose prose-lg md:prose-xl max-w-none text-gray-700 leading-relaxed whitespace-pre-line font-serif">
             {trip.description}
           </div>
         </div>
 
         {/* Gallery Section */}
-        {trip.gallery?.length > 0 && (
+        {normalizedGallery.length > 0 && (
           <div className="mb-20">
             <div className="flex items-center justify-between mb-10 px-4">
               <h2 className="text-3xl md:text-4xl font-black text-gray-900 flex items-center">
-                <Camera className="h-8 w-8 mr-4 text-blue-600" />
+                <Camera className="h-8 w-8 mr-4 text-secondary-700" />
                 Momentos Capturados
               </h2>
-              <span className="text-gray-500 font-medium">{trip.gallery.length} fotos</span>
+              <span className="text-gray-500 font-medium bg-white px-4 py-1 rounded-full shadow-sm border border-gray-100">{normalizedGallery.length} fotos</span>
             </div>
             
             {/* Masonry Layout */}
             <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
-              {trip.gallery.map((img, i) => (
+              {normalizedGallery.map((item, i) => (
                 <div 
                   key={i} 
-                  className="relative rounded-3xl overflow-hidden shadow-md hover:shadow-xl group cursor-pointer break-inside-avoid transition-all duration-300"
-                  onClick={() => setSelectedImageIndex(i)}
+                  className="relative rounded-3xl overflow-hidden shadow-md hover:shadow-xl group cursor-pointer break-inside-avoid transition-all duration-300 border-4 border-transparent hover:border-secondary-600/20"
+                  onClick={() => handleOpenLightbox(i)}
                 >
-                  <img src={img} alt={`Galería ${i}`} className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                  <img src={item.url} alt={`Galería ${i}`} className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
+                  {item.review && (
+                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                      <p className="text-white text-xs line-clamp-2 italic">"{item.review}"</p>
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
                     <div className="bg-white/30 backdrop-blur-md p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
                       <Camera className="text-white h-6 w-6" />
                     </div>
@@ -259,11 +293,11 @@ const TripDetail = ({ trip, onBack, onEdit, onDelete, isAdmin }) => {
         {/* Map Section */}
         <div className="mb-12">
           <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-10 flex items-center px-4">
-            <MapPin className="h-8 w-8 mr-4 text-blue-600" />
+            <MapPin className="h-8 w-8 mr-4 text-secondary-700" />
             Ubicación
           </h2>
           <div className="w-full h-[500px] rounded-[40px] overflow-hidden shadow-2xl border border-gray-100 relative group">
-            <div className="absolute inset-0 bg-blue-600/5 group-hover:bg-transparent transition-colors duration-500 pointer-events-none z-10" />
+            <div className="absolute inset-0 bg-primary-900/5 group-hover:bg-transparent transition-colors duration-500 pointer-events-none z-10" />
             <iframe width="100%" height="100%" style={{ border: 0 }} loading="lazy" allowFullScreen src={`https://maps.google.com/maps?q=${encodeURIComponent(trip.location + ', ' + trip.country)}&t=&z=12&ie=UTF8&iwloc=&output=embed`} />
           </div>
         </div>
@@ -271,7 +305,7 @@ const TripDetail = ({ trip, onBack, onEdit, onDelete, isAdmin }) => {
 
       {/* Lightbox Modal */}
       {selectedImageIndex !== null && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-xl p-4 md:p-8" onClick={() => setSelectedImageIndex(null)}>
+        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/95 backdrop-blur-xl p-4 md:p-8" onClick={() => setSelectedImageIndex(null)}>
           <button 
             className="absolute top-6 right-6 text-white/50 hover:text-white bg-white/5 hover:bg-white/20 p-4 rounded-full backdrop-blur-md transition-all z-10"
             onClick={(e) => { e.stopPropagation(); setSelectedImageIndex(null); }}
@@ -282,30 +316,67 @@ const TripDetail = ({ trip, onBack, onEdit, onDelete, isAdmin }) => {
           {selectedImageIndex > 0 && (
             <button 
               className="absolute left-6 top-1/2 -translate-y-1/2 text-white/50 hover:text-white bg-white/5 hover:bg-white/20 p-4 rounded-full backdrop-blur-md transition-all z-10"
-              onClick={(e) => { e.stopPropagation(); setSelectedImageIndex(selectedImageIndex - 1); }}
+              onClick={(e) => { e.stopPropagation(); handleOpenLightbox(selectedImageIndex - 1); }}
             >
               <ArrowLeft className="h-8 w-8" />
             </button>
           )}
 
-          <img 
-            src={trip.gallery[selectedImageIndex]} 
-            alt="Full screen" 
-            className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl" 
-            onClick={(e) => e.stopPropagation()} 
-          />
+          <div className="relative max-w-5xl w-full flex flex-col items-center gap-6" onClick={e => e.stopPropagation()}>
+            <img 
+              src={normalizedGallery[selectedImageIndex].url} 
+              alt="Full screen" 
+              className="max-w-full max-h-[70vh] object-contain rounded-xl shadow-2xl" 
+            />
 
-          {selectedImageIndex < trip.gallery.length - 1 && (
+            {/* Review Section in Lightbox */}
+            <div className="w-full max-w-2xl bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/10 text-center relative group">
+              {isEditingReview ? (
+                <div className="space-y-4">
+                  <textarea 
+                    autoFocus
+                    className="w-full bg-black/20 border border-white/20 rounded-xl p-4 text-white placeholder-white/40 focus:ring-2 focus:ring-secondary-600 outline-none resize-none"
+                    placeholder="Escribe una breve reseña de este momento..."
+                    value={tempReview}
+                    onChange={e => setTempReview(e.target.value)}
+                    rows="3"
+                  />
+                  <div className="flex justify-center gap-3">
+                    <button onClick={() => setIsEditingReview(false)} className="px-6 py-2 rounded-full bg-white/10 text-white text-sm font-bold hover:bg-white/20">Cancelar</button>
+                    <button onClick={handleSaveReview} className="px-6 py-2 rounded-full bg-secondary-700 text-white text-sm font-bold hover:bg-secondary-600">Guardar Reseña</button>
+                  </div>
+                </div>
+              ) : (
+                <div className="relative">
+                  {tempReview ? (
+                    <p className="text-white text-lg font-medium italic leading-relaxed">"{tempReview}"</p>
+                  ) : (
+                    <p className="text-white/40 italic">Sin reseña para esta foto</p>
+                  )}
+                  {isAdmin && (
+                    <button 
+                      onClick={() => setIsEditingReview(true)}
+                      className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center mx-auto gap-2 text-secondary-400 hover:text-secondary-300 text-sm font-bold"
+                    >
+                      <Edit2 className="h-4 w-4" /> {tempReview ? 'Editar reseña' : 'Agregar reseña'}
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {selectedImageIndex < normalizedGallery.length - 1 && (
             <button 
               className="absolute right-6 top-1/2 -translate-y-1/2 text-white/50 hover:text-white bg-white/5 hover:bg-white/20 p-4 rounded-full backdrop-blur-md transition-all z-10 rotate-180"
-              onClick={(e) => { e.stopPropagation(); setSelectedImageIndex(selectedImageIndex + 1); }}
+              onClick={(e) => { e.stopPropagation(); handleOpenLightbox(selectedImageIndex + 1); }}
             >
               <ArrowLeft className="h-8 w-8" />
             </button>
           )}
           
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/50 font-medium tracking-widest text-sm bg-black/50 px-6 py-2 rounded-full backdrop-blur-md">
-            {selectedImageIndex + 1} / {trip.gallery.length}
+            {selectedImageIndex + 1} / {normalizedGallery.length}
           </div>
         </div>
       )}
@@ -362,7 +433,7 @@ const CreateTrip = ({ onSave, onCancel, initialData }) => {
     finally { setUploading(false); }
   };
 
-  const inputCls = "w-full bg-gray-50 border-0 rounded-2xl p-4 focus:ring-2 focus:ring-blue-500 outline-none";
+  const inputCls = "w-full bg-gray-50 border-0 rounded-2xl p-4 focus:ring-2 focus:ring-primary-600 outline-none";
   return (
     <main className="flex-grow max-w-4xl mx-auto px-4 py-12 w-full">
       <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 md:p-12">
@@ -380,16 +451,16 @@ const CreateTrip = ({ onSave, onCancel, initialData }) => {
               <label className="block text-sm font-bold text-gray-700 mb-2">Foto de Portada</label>
               <div className="relative group cursor-pointer">
                 <input type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer z-10" onChange={e => setImageFile(e.target.files[0])} />
-                <div className="w-full bg-gray-50 border-2 border-dashed border-gray-200 rounded-2xl p-4 flex items-center justify-center text-gray-500 group-hover:bg-blue-50 group-hover:border-blue-200 transition-all">
+                <div className="w-full bg-gray-50 border-2 border-dashed border-gray-200 rounded-2xl p-4 flex items-center justify-center text-gray-500 group-hover:bg-primary-50 group-hover:border-primary-200 transition-all">
                   <Upload className="h-5 w-5 mr-2" /><span className="text-sm">{imageFile ? imageFile.name : 'Seleccionar Archivo'}</span>
                 </div>
               </div>
             </div>
             <div className="md:col-span-2"><label className="block text-sm font-bold text-gray-700 mb-2">Tu Relato</label><textarea required rows="6" className={`${inputCls} resize-none`} value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} placeholder="Contanos qué descubriste..." /></div>
-            <div className="md:col-span-2"><label className="block text-sm font-bold text-gray-700 mb-2">Fotos de Galería</label><input type="file" multiple accept="image/*" className="w-full bg-gray-50 border-0 rounded-2xl p-4 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" onChange={e => setGalleryFiles(Array.from(e.target.files))} /></div>
+            <div className="md:col-span-2"><label className="block text-sm font-bold text-gray-700 mb-2">Fotos de Galería</label><input type="file" multiple accept="image/*" className="w-full bg-gray-50 border-0 rounded-2xl p-4 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-800 hover:file:bg-primary-100" onChange={e => setGalleryFiles(Array.from(e.target.files))} /></div>
           </div>
           <div className="flex justify-end pt-6">
-            <button disabled={uploading} type="submit" className="bg-blue-600 text-white px-10 py-4 rounded-2xl font-black hover:bg-blue-700 disabled:opacity-50 flex items-center shadow-xl">
+            <button disabled={uploading} type="submit" className="bg-primary-900 text-white px-10 py-4 rounded-2xl font-black hover:bg-primary-800 disabled:opacity-50 flex items-center shadow-xl">
               {uploading ? <Loader2 className="animate-spin mr-2" /> : <Save className="mr-2" />}
               {initialData ? 'Guardar Cambios' : 'Publicar Viaje'}
             </button>
@@ -419,7 +490,7 @@ function AppContent() {
   }, [user]);
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center bg-[#fcfdfe]"><Loader2 className="h-10 w-10 text-blue-500 animate-spin" /></div>;
+    return <div className="min-h-screen flex items-center justify-center bg-warm-50"><Loader2 className="h-10 w-10 text-primary-600 animate-spin" /></div>;
   }
 
   if (!user || !profile) return <LoginPage />;
@@ -444,7 +515,7 @@ function AppContent() {
   const activeTrip = trips.find(t => t.id === selectedTripId);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#fcfdfe] font-sans">
+    <div className="min-h-screen flex flex-col bg-warm-50 font-sans">
       <Navbar isAdmin={isAdmin} onGoHome={() => setCurrentView('home')} onNewTrip={() => setCurrentView('create')} onUsers={() => setCurrentView('users')} />
       {currentView === 'home'   && <Home trips={trips} loading={tripsLoading} isAdmin={isAdmin} onTripSelect={id => { setSelectedTripId(id); setCurrentView('detail'); }} />}
       {currentView === 'users'  && <UsersPage onBack={() => setCurrentView('home')} />}
