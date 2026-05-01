@@ -174,47 +174,143 @@ const Home = ({ trips, onTripSelect, loading }) => {
 // ── TRIP DETAIL ────────────────────────────────────────────
 const TripDetail = ({ trip, onBack, onEdit, onDelete, isAdmin }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+
   if (!trip) return null;
+
   return (
-    <main className="flex-grow bg-white w-full">
-      <div className="relative h-[50vh] min-h-[400px] w-full bg-gray-900">
-        <img src={trip.coverImage} alt={trip.title} className="w-full h-full object-cover opacity-80" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-        <div className="absolute top-6 left-4 right-4 flex justify-between items-center z-10">
-          <button onClick={onBack} className="bg-white/20 hover:bg-white/40 backdrop-blur-md p-2 rounded-full text-white"><ArrowLeft className="h-6 w-6" /></button>
+    <main className="flex-grow bg-[#fcfdfe] w-full pb-20">
+      {/* Hero Section */}
+      <div className="relative h-[60vh] min-h-[500px] w-full bg-gray-900">
+        <img src={trip.coverImage} alt={trip.title} className="w-full h-full object-cover opacity-70" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+        
+        {/* Navigation / Actions */}
+        <div className="absolute top-6 left-4 right-4 flex justify-between items-center z-10 max-w-7xl mx-auto px-4">
+          <button onClick={onBack} className="bg-white/20 hover:bg-white/40 backdrop-blur-md p-3 rounded-full text-white transition-all shadow-sm">
+            <ArrowLeft className="h-6 w-6" />
+          </button>
           {isAdmin && (
-            <div className="flex gap-2">
-              <button onClick={onEdit} className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full text-white text-sm font-bold shadow-lg flex items-center"><Edit2 className="h-4 w-4 mr-2" />Editar</button>
-              <button onClick={() => setShowDeleteModal(true)} className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-full text-white text-sm font-bold shadow-lg flex items-center"><Trash2 className="h-4 w-4 mr-2" />Eliminar</button>
+            <div className="flex gap-3">
+              <button onClick={onEdit} className="bg-blue-600/90 hover:bg-blue-700 backdrop-blur-sm px-5 py-2.5 rounded-full text-white text-sm font-bold shadow-lg flex items-center transition-all">
+                <Edit2 className="h-4 w-4 mr-2" />Editar
+              </button>
+              <button onClick={() => setShowDeleteModal(true)} className="bg-red-600/90 hover:bg-red-700 backdrop-blur-sm px-5 py-2.5 rounded-full text-white text-sm font-bold shadow-lg flex items-center transition-all">
+                <Trash2 className="h-4 w-4 mr-2" />Eliminar
+              </button>
             </div>
           )}
         </div>
-        <div className="absolute bottom-10 left-0 w-full px-6 md:px-12 max-w-5xl mx-auto">
-          <span className="bg-blue-600 text-white text-xs font-black px-3 py-1 rounded-full uppercase tracking-tighter mb-4 inline-block">{trip.country}</span>
-          <h1 className="text-4xl md:text-6xl font-black text-white mb-4 leading-tight">{trip.title}</h1>
-          <div className="flex flex-wrap gap-6 text-gray-200 font-medium">
-            <span className="flex items-center"><MapPin className="h-5 w-5 mr-2 text-blue-400" />{trip.location}</span>
-            <span className="flex items-center"><Calendar className="h-5 w-5 mr-2 text-blue-400" />{formatDate(trip.date)}</span>
+
+        {/* Hero Content */}
+        <div className="absolute bottom-24 left-0 w-full px-6 md:px-12 max-w-5xl mx-auto">
+          <div className="flex flex-wrap items-center gap-3 mb-6">
+            <span className="bg-blue-600 text-white text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">{trip.country}</span>
+            <span className="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-4 py-1.5 rounded-full flex items-center shadow-lg">
+              <Calendar className="h-3 w-3 mr-1.5" />{formatDate(trip.date)}
+            </span>
+            <span className="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-4 py-1.5 rounded-full flex items-center shadow-lg">
+              <MapPin className="h-3 w-3 mr-1.5" />{trip.location}
+            </span>
           </div>
+          <h1 className="text-5xl md:text-7xl font-black text-white mb-4 leading-tight drop-shadow-xl">{trip.title}</h1>
         </div>
       </div>
-      <div className="max-w-4xl mx-auto px-6 py-16">
-        <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed whitespace-pre-line">{trip.description}</div>
+
+      {/* Main Content Overlapping Hero */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-20 -mt-16">
+        <div className="bg-white rounded-[40px] shadow-2xl border border-gray-100 p-8 md:p-16 mb-12">
+          <div className="prose prose-lg md:prose-xl max-w-none text-gray-700 leading-relaxed whitespace-pre-line">
+            {trip.description}
+          </div>
+        </div>
+
+        {/* Gallery Section */}
         {trip.gallery?.length > 0 && (
-          <div className="mt-20">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8 flex items-center"><Camera className="h-6 w-6 mr-3 text-blue-600" />Momentos Capturados</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {trip.gallery.map((img, i) => <div key={i} className="rounded-3xl overflow-hidden h-72 shadow-xl group"><img src={img} alt="Galería" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" /></div>)}
+          <div className="mb-20">
+            <div className="flex items-center justify-between mb-10 px-4">
+              <h2 className="text-3xl md:text-4xl font-black text-gray-900 flex items-center">
+                <Camera className="h-8 w-8 mr-4 text-blue-600" />
+                Momentos Capturados
+              </h2>
+              <span className="text-gray-500 font-medium">{trip.gallery.length} fotos</span>
+            </div>
+            
+            {/* Masonry Layout */}
+            <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
+              {trip.gallery.map((img, i) => (
+                <div 
+                  key={i} 
+                  className="relative rounded-3xl overflow-hidden shadow-md hover:shadow-xl group cursor-pointer break-inside-avoid transition-all duration-300"
+                  onClick={() => setSelectedImageIndex(i)}
+                >
+                  <img src={img} alt={`Galería ${i}`} className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                    <div className="bg-white/30 backdrop-blur-md p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
+                      <Camera className="text-white h-6 w-6" />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
-        <div className="mt-20">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8 flex items-center"><MapPin className="h-6 w-6 mr-3 text-blue-600" />Mapa del Destino</h2>
-          <div className="w-full h-96 rounded-3xl overflow-hidden shadow-2xl border border-gray-100">
+
+        {/* Map Section */}
+        <div className="mb-12">
+          <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-10 flex items-center px-4">
+            <MapPin className="h-8 w-8 mr-4 text-blue-600" />
+            Ubicación
+          </h2>
+          <div className="w-full h-[500px] rounded-[40px] overflow-hidden shadow-2xl border border-gray-100 relative group">
+            <div className="absolute inset-0 bg-blue-600/5 group-hover:bg-transparent transition-colors duration-500 pointer-events-none z-10" />
             <iframe width="100%" height="100%" style={{ border: 0 }} loading="lazy" allowFullScreen src={`https://maps.google.com/maps?q=${encodeURIComponent(trip.location + ', ' + trip.country)}&t=&z=12&ie=UTF8&iwloc=&output=embed`} />
           </div>
         </div>
       </div>
+
+      {/* Lightbox Modal */}
+      {selectedImageIndex !== null && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-xl p-4 md:p-8" onClick={() => setSelectedImageIndex(null)}>
+          <button 
+            className="absolute top-6 right-6 text-white/50 hover:text-white bg-white/5 hover:bg-white/20 p-4 rounded-full backdrop-blur-md transition-all z-10"
+            onClick={(e) => { e.stopPropagation(); setSelectedImageIndex(null); }}
+          >
+            <X className="h-8 w-8" />
+          </button>
+          
+          {selectedImageIndex > 0 && (
+            <button 
+              className="absolute left-6 top-1/2 -translate-y-1/2 text-white/50 hover:text-white bg-white/5 hover:bg-white/20 p-4 rounded-full backdrop-blur-md transition-all z-10"
+              onClick={(e) => { e.stopPropagation(); setSelectedImageIndex(selectedImageIndex - 1); }}
+            >
+              <ArrowLeft className="h-8 w-8" />
+            </button>
+          )}
+
+          <img 
+            src={trip.gallery[selectedImageIndex]} 
+            alt="Full screen" 
+            className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl" 
+            onClick={(e) => e.stopPropagation()} 
+          />
+
+          {selectedImageIndex < trip.gallery.length - 1 && (
+            <button 
+              className="absolute right-6 top-1/2 -translate-y-1/2 text-white/50 hover:text-white bg-white/5 hover:bg-white/20 p-4 rounded-full backdrop-blur-md transition-all z-10 rotate-180"
+              onClick={(e) => { e.stopPropagation(); setSelectedImageIndex(selectedImageIndex + 1); }}
+            >
+              <ArrowLeft className="h-8 w-8" />
+            </button>
+          )}
+          
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/50 font-medium tracking-widest text-sm bg-black/50 px-6 py-2 rounded-full backdrop-blur-md">
+            {selectedImageIndex + 1} / {trip.gallery.length}
+          </div>
+        </div>
+      )}
+
+      {/* Delete Modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
           <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl text-center">
