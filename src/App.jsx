@@ -39,36 +39,112 @@ function LoginPage() {
     finally { setLoading(false); }
   }
 
-  const inputCls = "w-full bg-gray-50 border-0 rounded-2xl p-4 focus:ring-2 focus:ring-primary-600 outline-none";
+  const inputCls = "w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3.5 text-sm focus:ring-2 focus:ring-primary-600 focus:border-transparent outline-none transition-all placeholder:text-gray-400";
+  const labelCls = "block text-xs font-semibold text-primary-900 mb-1.5 uppercase tracking-wide";
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-warm-50 px-4">
-      <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-10 w-full max-w-md">
-        <div className="flex items-center mb-8">
-          <Plane className="h-8 w-8 text-primary-900 mr-2" />
-          <span className="font-bold text-xl text-gray-900">Mi Bitácora</span>
+    <div className="min-h-screen flex">
+      {/* Left visual panel */}
+      <div className="hidden lg:flex lg:w-3/5 relative bg-primary-900 flex-col items-center justify-center overflow-hidden">
+        <div className="absolute top-[-100px] right-[-120px] w-[480px] h-[480px] rounded-full bg-white/[0.04]" />
+        <div className="absolute bottom-[-80px] left-[-100px] w-[360px] h-[360px] rounded-full bg-white/[0.05]" />
+        <div className="absolute top-[30%] left-[8%] w-48 h-48 rounded-full bg-white/[0.03]" />
+
+        {/* Floating mini cards */}
+        <div className="absolute top-14 left-10 w-52 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 shadow-xl -rotate-3">
+          <div className="w-full h-24 bg-gradient-to-br from-[#0e6b89] to-[#29a0c2] rounded-xl mb-3" />
+          <p className="font-serif font-bold text-white text-base leading-tight">Santorini</p>
+          <p className="text-white/55 text-xs mt-0.5">Grecia · Jun 2024</p>
         </div>
-        <h2 className="text-2xl font-black text-gray-900 mb-1">
-          {mode === 'login' ? 'Bienvenido de vuelta' : 'Crear cuenta'}
-        </h2>
-        <p className="text-gray-400 text-sm mb-8">
-          {mode === 'login' ? 'Ingresá para ver tu bitácora.' : 'Registrate para empezar.'}
-        </p>
-        {error && <div className="bg-red-50 border border-red-200 text-red-600 rounded-2xl px-4 py-3 text-sm mb-6">{error}</div>}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {mode === 'register' && <input required placeholder="Nombre completo" className={inputCls} value={form.displayName} onChange={set('displayName')} />}
-          <input required type="email" placeholder="Email" className={inputCls} value={form.email} onChange={set('email')} />
-          <input required type="password" placeholder="Contraseña" className={inputCls} value={form.password} onChange={set('password')} />
-          {mode === 'register' && <input required type="password" placeholder="Confirmar contraseña" className={inputCls} value={form.confirm} onChange={set('confirm')} />}
-          <button type="submit" disabled={loading}
-            className="w-full bg-primary-900 text-white py-4 rounded-2xl font-black hover:bg-primary-800 transition-colors disabled:opacity-50 flex items-center justify-center">
-            {loading ? <Loader2 className="animate-spin h-5 w-5" /> : (mode === 'login' ? 'Ingresar' : 'Registrarse')}
-          </button>
-        </form>
-        <button onClick={() => { setMode(m => m === 'login' ? 'register' : 'login'); setError(''); }}
-          className="w-full mt-4 text-sm text-primary-900 hover:underline">
-          {mode === 'login' ? '¿No tenés cuenta? Registrate' : '¿Ya tenés cuenta? Ingresá'}
-        </button>
+        <div className="absolute top-20 right-8 w-48 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 shadow-xl rotate-[4deg]">
+          <div className="w-full h-20 bg-gradient-to-br from-[#7e1d10] to-[#c04020] rounded-xl mb-3" />
+          <p className="font-serif font-bold text-white text-sm leading-tight">Marrakech</p>
+          <p className="text-white/55 text-xs mt-0.5">Marruecos · Sep 2024</p>
+        </div>
+        <div className="absolute bottom-16 left-14 w-52 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 shadow-xl rotate-[2deg]">
+          <div className="w-full h-24 bg-gradient-to-br from-[#1e3d6b] to-[#2f5fa0] rounded-xl mb-3" />
+          <p className="font-serif font-bold text-white text-base leading-tight">Patagonia</p>
+          <p className="text-white/55 text-xs mt-0.5">Argentina · Ene 2025</p>
+        </div>
+        <div className="absolute bottom-24 right-10 w-44 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 shadow-xl -rotate-2">
+          <div className="w-full h-20 bg-gradient-to-br from-[#5b1e7a] to-[#8b35b8] rounded-xl mb-3" />
+          <p className="font-serif font-bold text-white text-sm leading-tight">Lisboa</p>
+          <p className="text-white/55 text-xs mt-0.5">Portugal · Ago 2024</p>
+        </div>
+
+        {/* Brand center */}
+        <div className="z-10 text-center">
+          <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-2xl">
+            <span className="font-serif text-3xl font-bold text-primary-900 leading-none">B</span>
+          </div>
+          <h1 className="font-serif text-4xl font-bold text-white mb-2">Mi Bitácora</h1>
+          <p className="font-serif italic text-lg text-white/70">Guardá cada aventura</p>
+        </div>
+      </div>
+
+      {/* Right form panel */}
+      <div className="flex-1 flex items-center justify-center bg-warm-50 p-8">
+        <div className="w-full max-w-sm">
+          {/* Mobile brand */}
+          <div className="flex items-center mb-8 lg:hidden">
+            <div className="w-10 h-10 bg-primary-900 rounded-xl flex items-center justify-center mr-3 shadow-md">
+              <span className="font-serif text-xl font-bold text-white leading-none">B</span>
+            </div>
+            <span className="font-serif text-xl font-bold text-gray-900">Mi Bitácora</span>
+          </div>
+
+          {/* Tabs */}
+          <div className="flex bg-warm-100 rounded-2xl p-1 mb-8 border border-gray-200/60">
+            <button
+              onClick={() => { setMode('login'); setError(''); }}
+              className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${mode === 'login' ? 'bg-white shadow-sm text-primary-900' : 'text-gray-500 hover:text-gray-700'}`}
+            >
+              Iniciar sesión
+            </button>
+            <button
+              onClick={() => { setMode('register'); setError(''); }}
+              className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${mode === 'register' ? 'bg-white shadow-sm text-primary-900' : 'text-gray-500 hover:text-gray-700'}`}
+            >
+              Crear cuenta
+            </button>
+          </div>
+
+          <h2 className="font-serif text-2xl font-bold text-gray-900 mb-1">
+            {mode === 'login' ? 'Bienvenido de vuelta' : 'Empezá tu bitácora'}
+          </h2>
+          <p className="text-gray-400 text-sm mb-7">
+            {mode === 'login' ? 'Ingresá para ver tu colección de viajes.' : 'Creá tu cuenta y comenzá a registrar aventuras.'}
+          </p>
+
+          {error && <div className="bg-red-50 border border-red-200 text-red-600 rounded-2xl px-4 py-3 text-sm mb-5">{error}</div>}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {mode === 'register' && (
+              <div>
+                <label className={labelCls}>Nombre completo</label>
+                <input required placeholder="Tu nombre" className={inputCls} value={form.displayName} onChange={set('displayName')} />
+              </div>
+            )}
+            <div>
+              <label className={labelCls}>Correo electrónico</label>
+              <input required type="email" placeholder="tu@email.com" className={inputCls} value={form.email} onChange={set('email')} />
+            </div>
+            <div>
+              <label className={labelCls}>Contraseña</label>
+              <input required type="password" placeholder="••••••••" className={inputCls} value={form.password} onChange={set('password')} />
+            </div>
+            {mode === 'register' && (
+              <div>
+                <label className={labelCls}>Confirmar contraseña</label>
+                <input required type="password" placeholder="••••••••" className={inputCls} value={form.confirm} onChange={set('confirm')} />
+              </div>
+            )}
+            <button type="submit" disabled={loading}
+              className="w-full bg-primary-900 text-white py-3.5 rounded-2xl font-semibold hover:bg-primary-800 transition-all disabled:opacity-50 flex items-center justify-center shadow-lg shadow-primary-900/25 mt-2">
+              {loading ? <Loader2 className="animate-spin h-5 w-5" /> : (mode === 'login' ? 'Ingresar' : 'Crear cuenta')}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
@@ -78,29 +154,33 @@ function LoginPage() {
 function Navbar({ onGoHome, onNewTrip, onUsers, isAdmin }) {
   const { logout } = useAuth();
   return (
-    <nav className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
-          <div className="flex items-center cursor-pointer hover:opacity-80 transition-opacity" onClick={onGoHome}>
-            <Plane className="h-8 w-8 text-primary-900 mr-2" />
-            <span className="font-bold text-xl text-gray-900 tracking-tight">Mi Bitácora</span>
+          <div className="flex items-center gap-2.5 cursor-pointer hover:opacity-80 transition-opacity" onClick={onGoHome}>
+            <div className="w-9 h-9 bg-primary-900 rounded-xl flex items-center justify-center shadow-md flex-shrink-0">
+              <span className="font-serif text-lg font-bold text-white leading-none">B</span>
+            </div>
+            <span className="font-serif font-bold text-xl text-gray-900 tracking-tight">Mi Bitácora</span>
           </div>
-          <div className="flex items-center space-x-3">
-            <span className={`hidden sm:flex items-center text-xs font-bold px-3 py-1 rounded-full border ${isAdmin ? 'bg-purple-50 border-purple-200 text-purple-700' : 'bg-blue-50 border-primary-200 text-primary-800'}`}>
-              {isAdmin ? <Shield className="h-3 w-3 mr-1" /> : <Eye className="h-3 w-3 mr-1" />}
-              {isAdmin ? 'Admin' : 'Viajero'}
-            </span>
+          <div className="flex items-center gap-2">
             {isAdmin && (
               <>
-                <button onClick={onUsers} className="hidden sm:flex items-center text-sm font-medium text-gray-500 hover:text-purple-600 transition-colors bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200">
-                  <Shield className="h-4 w-4 sm:mr-1" /><span className="hidden sm:inline">Usuarios</span>
+                <button onClick={onUsers}
+                  className="hidden sm:flex items-center text-sm font-medium text-gray-500 hover:text-primary-900 transition-colors bg-gray-50 hover:bg-gray-100 px-3.5 py-2 rounded-full border border-gray-200 gap-1.5">
+                  <Shield className="h-3.5 w-3.5" /><span>Usuarios</span>
                 </button>
-                <button onClick={onNewTrip} className="bg-primary-900 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-primary-800 flex items-center shadow-sm">
-                  <Plus className="h-4 w-4 sm:mr-1" /><span className="hidden sm:inline">Nuevo Viaje</span>
+                <button onClick={onNewTrip}
+                  className="bg-primary-900 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-primary-800 flex items-center gap-1.5 shadow-md shadow-primary-900/20 transition-all">
+                  <Plus className="h-4 w-4" /><span className="hidden sm:inline">Nuevo Viaje</span>
                 </button>
               </>
             )}
-            <button onClick={logout} className="text-gray-400 hover:text-red-500 transition-colors" title="Cerrar sesión">
+            <span className={`hidden sm:flex items-center text-xs font-semibold px-3 py-1.5 rounded-full ${isAdmin ? 'bg-purple-50 text-purple-700 border border-purple-200' : 'bg-primary-50 text-primary-800 border border-primary-100'}`}>
+              {isAdmin ? <Shield className="h-3 w-3 mr-1.5" /> : <Eye className="h-3 w-3 mr-1.5" />}
+              {isAdmin ? 'Admin' : 'Viajero'}
+            </span>
+            <button onClick={logout} className="text-gray-400 hover:text-red-500 transition-colors p-1" title="Cerrar sesión">
               <LogOut className="h-5 w-5" />
             </button>
           </div>
@@ -112,16 +192,22 @@ function Navbar({ onGoHome, onNewTrip, onUsers, isAdmin }) {
 
 // ── TRIP CARD ──────────────────────────────────────────────
 const TripCard = ({ trip, onClick }) => (
-  <div onClick={() => onClick(trip.id)} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow cursor-pointer group flex flex-col h-full">
-    <div className="relative h-48 overflow-hidden bg-gray-100">
+  <div onClick={() => onClick(trip.id)} className="rounded-3xl overflow-hidden cursor-pointer group flex flex-col h-full shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+    <div className="relative h-56 overflow-hidden bg-gray-100">
       <img src={trip.coverImage || 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=1000&auto=format&fit=crop'} alt={trip.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-      <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-gray-700 shadow-sm">{trip.country}</div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+      <div className="absolute top-3 left-3 bg-white text-primary-900 text-[10px] font-semibold px-2.5 py-1 rounded-full shadow-sm">{formatDate(trip.date)}</div>
+      <div className="absolute top-3 right-3 bg-white/20 backdrop-blur-md border border-white/30 text-white text-xs font-semibold px-2.5 py-1 rounded-full">{trip.country}</div>
+      <div className="absolute bottom-0 left-0 right-0 p-4">
+        <h3 className="font-serif text-xl font-bold text-white leading-tight line-clamp-2 drop-shadow-sm">{trip.title}</h3>
+      </div>
     </div>
-    <div className="p-5 flex flex-col flex-grow">
-      <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-1">{trip.title}</h3>
-      <div className="flex items-center text-gray-500 text-sm mb-2"><MapPin className="h-4 w-4 mr-1 shrink-0" /><span className="truncate">{trip.location}</span></div>
-      <div className="flex items-center text-gray-500 text-sm mb-4"><Calendar className="h-4 w-4 mr-1 shrink-0" /><span>{formatDate(trip.date)}</span></div>
-      <p className="text-gray-600 text-sm line-clamp-2 mt-auto">{trip.description}</p>
+    <div className="bg-white p-4 flex flex-col gap-1.5 flex-grow">
+      <div className="flex items-center text-gray-500 text-sm gap-1.5">
+        <MapPin className="h-3.5 w-3.5 shrink-0 text-secondary-700" />
+        <span className="truncate">{trip.location}</span>
+      </div>
+      <p className="text-gray-400 text-sm line-clamp-2">{trip.description}</p>
     </div>
   </div>
 );
@@ -129,43 +215,107 @@ const TripCard = ({ trip, onClick }) => (
 // ── HOME ───────────────────────────────────────────────────
 const Home = ({ trips, onTripSelect, loading }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const filtered = [...trips].sort((a, b) => new Date(b.date) - new Date(a.date))
-    .filter(t => t.title.toLowerCase().includes(searchTerm.toLowerCase()) || t.country.toLowerCase().includes(searchTerm.toLowerCase()));
+  const sorted = [...trips].sort((a, b) => new Date(b.date) - new Date(a.date));
+  const filtered = sorted.filter(t =>
+    t.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    t.country.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   const uniqueCountries = new Set(trips.map(t => t.country.trim().toLowerCase())).size;
+  const totalPhotos = trips.reduce((acc, t) => acc + (t.gallery?.length || 0), 0);
+  const featuredTrip = filtered[0];
+  const restTrips = filtered.slice(1);
 
   return (
-    <main className="flex-grow max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
-      <div className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <main className="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+      {/* Header */}
+      <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight mb-3">Mis Aventuras</h1>
-          <p className="text-lg text-gray-500">Explora mis recuerdos y destinos alrededor del mundo.</p>
+          <h1 className="font-serif text-4xl font-bold text-gray-900 tracking-tight">Mis Aventuras</h1>
+          <p className="text-gray-500 mt-1">Explora mis recuerdos y destinos alrededor del mundo.</p>
         </div>
         {trips.length > 0 && (
-          <div className="flex bg-white rounded-2xl shadow-sm border border-gray-100 p-1.5 w-full md:w-auto">
-            <div className="px-6 py-2 text-center border-r border-gray-100 flex-1">
-              <p className="text-2xl font-black text-primary-900">{trips.length}</p>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Viajes</p>
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-2 bg-white rounded-2xl shadow-sm border border-gray-100 px-4 py-2.5">
+              <span className="text-xl font-bold text-primary-900">{trips.length}</span>
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Viajes</span>
             </div>
-            <div className="px-6 py-2 text-center flex-1">
-              <p className="text-2xl font-black text-primary-900">{uniqueCountries}</p>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Países</p>
+            <div className="flex items-center gap-2 bg-white rounded-2xl shadow-sm border border-gray-100 px-4 py-2.5">
+              <span className="text-xl font-bold text-primary-900">{uniqueCountries}</span>
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Países</span>
             </div>
+            {totalPhotos > 0 && (
+              <div className="flex items-center gap-2 bg-white rounded-2xl shadow-sm border border-gray-100 px-4 py-2.5">
+                <span className="text-xl font-bold text-primary-900">{totalPhotos}</span>
+                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Fotos</span>
+              </div>
+            )}
           </div>
         )}
       </div>
+
+      {/* Search */}
       {trips.length > 0 && (
-        <div className="relative max-w-md mb-8">
+        <div className="relative mb-8">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-          <input type="text" placeholder="Buscar por título o país..." className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-primary-600 outline-none shadow-sm" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+          <input type="text" placeholder="Buscar por título, país o destino..."
+            className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-primary-600 outline-none shadow-sm text-sm"
+            value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
         </div>
       )}
+
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20"><Loader2 className="h-10 w-10 text-primary-600 animate-spin mb-4" /><p className="text-gray-500 font-medium">Sincronizando...</p></div>
+        <div className="flex flex-col items-center justify-center py-20">
+          <Loader2 className="h-10 w-10 text-primary-600 animate-spin mb-4" />
+          <p className="text-gray-500 font-medium">Sincronizando...</p>
+        </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-200"><Globe className="h-12 w-12 text-gray-300 mx-auto mb-4" /><p className="text-gray-500 text-lg">No se encontraron viajes.</p></div>
+        <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-200">
+          <Globe className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+          <p className="text-gray-500 text-lg">No se encontraron viajes.</p>
+        </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map(trip => <TripCard key={trip.id} trip={trip} onClick={onTripSelect} />)}
+        <div className="space-y-8">
+          {/* Featured card — viaje más reciente */}
+          {featuredTrip && !searchTerm && (
+            <div onClick={() => onTripSelect(featuredTrip.id)}
+              className="relative w-full h-80 sm:h-96 rounded-3xl overflow-hidden cursor-pointer group shadow-xl">
+              <img src={featuredTrip.coverImage || 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=1000&auto=format&fit=crop'}
+                alt={featuredTrip.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+              <div className="absolute top-5 left-5 bg-secondary-700 text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg flex items-center gap-1.5">
+                <span>★</span> Viaje destacado
+              </div>
+              <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
+                <div className="flex flex-wrap items-center gap-2 mb-3">
+                  <span className="bg-white/20 backdrop-blur-md border border-white/25 text-white text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5">
+                    <Globe className="h-3 w-3" />{featuredTrip.country}
+                  </span>
+                  <span className="bg-white/20 backdrop-blur-md border border-white/25 text-white text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5">
+                    <Calendar className="h-3 w-3" />{formatDate(featuredTrip.date)}
+                  </span>
+                  <span className="bg-white/20 backdrop-blur-md border border-white/25 text-white text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5">
+                    <MapPin className="h-3 w-3" />{featuredTrip.location}
+                  </span>
+                </div>
+                <h2 className="font-serif text-3xl sm:text-5xl font-bold text-white leading-tight drop-shadow-lg">{featuredTrip.title}</h2>
+              </div>
+            </div>
+          )}
+
+          {/* Grid */}
+          {(searchTerm ? filtered : restTrips).length > 0 && (
+            <>
+              {!searchTerm && restTrips.length > 0 && (
+                <div className="flex items-center justify-between pt-2">
+                  <h3 className="font-serif text-xl font-bold text-gray-800">Todos los viajes</h3>
+                  <span className="text-sm text-gray-400">{restTrips.length} {restTrips.length === 1 ? 'viaje' : 'viajes'}</span>
+                </div>
+              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {(searchTerm ? filtered : restTrips).map(trip => <TripCard key={trip.id} trip={trip} onClick={onTripSelect} />)}
+              </div>
+            </>
+          )}
         </div>
       )}
     </main>
@@ -243,13 +393,17 @@ const TripDetail = ({ trip, onBack, onEdit, onDelete, isAdmin }) => {
               <MapPin className="h-3 w-3 mr-1.5 text-secondary-600" />{trip.location}
             </span>
           </div>
-          <h1 className="text-5xl md:text-7xl font-black text-white mb-4 leading-tight drop-shadow-xl">{trip.title}</h1>
+          <h1 className="font-serif text-5xl md:text-7xl font-bold text-white mb-4 leading-tight drop-shadow-xl">{trip.title}</h1>
         </div>
       </div>
 
       {/* Main Content Overlapping Hero */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-20 -mt-16">
         <div className="bg-white rounded-[40px] shadow-2xl border border-gray-100 p-8 md:p-16 mb-12">
+          <div className="mb-8">
+            <h2 className="font-serif text-2xl font-bold text-primary-900">Descripción del viaje</h2>
+            <div className="w-10 h-1 bg-secondary-600 rounded-full mt-2" />
+          </div>
           <div className="prose prose-lg md:prose-xl max-w-none text-gray-700 leading-relaxed whitespace-pre-line font-serif">
             {trip.description}
           </div>
@@ -259,10 +413,13 @@ const TripDetail = ({ trip, onBack, onEdit, onDelete, isAdmin }) => {
         {normalizedGallery.length > 0 && (
           <div className="mb-20">
             <div className="flex items-center justify-between mb-10 px-4">
-              <h2 className="text-3xl md:text-4xl font-black text-gray-900 flex items-center">
-                <Camera className="h-8 w-8 mr-4 text-secondary-700" />
-                Momentos Capturados
-              </h2>
+              <div>
+                <h2 className="font-serif text-3xl md:text-4xl font-bold text-gray-900 flex items-center gap-3">
+                  <Camera className="h-7 w-7 text-secondary-700" />
+                  Momentos Capturados
+                </h2>
+                <div className="w-10 h-1 bg-secondary-600 rounded-full mt-2 ml-10" />
+              </div>
               <span className="text-gray-500 font-medium bg-white px-4 py-1 rounded-full shadow-sm border border-gray-100">{normalizedGallery.length} fotos</span>
             </div>
             
@@ -293,10 +450,13 @@ const TripDetail = ({ trip, onBack, onEdit, onDelete, isAdmin }) => {
 
         {/* Map Section */}
         <div className="mb-12">
-          <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-10 flex items-center px-4">
-            <MapPin className="h-8 w-8 mr-4 text-secondary-700" />
-            Ubicación
-          </h2>
+          <div className="mb-10 px-4">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-gray-900 flex items-center gap-3">
+              <MapPin className="h-7 w-7 text-secondary-700" />
+              Ubicación
+            </h2>
+            <div className="w-10 h-1 bg-secondary-600 rounded-full mt-2 ml-10" />
+          </div>
           <div className="w-full h-[500px] rounded-[40px] overflow-hidden shadow-2xl border border-gray-100 relative group">
             <div className="absolute inset-0 bg-primary-900/5 group-hover:bg-transparent transition-colors duration-500 pointer-events-none z-10" />
             <iframe width="100%" height="100%" style={{ border: 0 }} loading="lazy" allowFullScreen src={`https://maps.google.com/maps?q=${encodeURIComponent(trip.location + ', ' + trip.country)}&t=&z=12&ie=UTF8&iwloc=&output=embed`} />
